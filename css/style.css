@@ -1,0 +1,710 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+}
+
+.page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.page.active {
+    display: flex;
+}
+
+/* 首页样式 */
+.header {
+    padding: 20px;
+    padding-top: 40px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 15px;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+.user-details {
+    flex: 1;
+}
+
+.username {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.level-info {
+    display: flex;
+    gap: 15px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.game-title {
+    text-align: center;
+    font-size: 48px;
+    font-weight: 800;
+    margin: 30px 0;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #fff 0%, #ffd700 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.level-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    padding: 0 20px;
+    margin-bottom: 20px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.level-item {
+    aspect-ratio: 1;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
+}
+
+.level-item:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.level-item.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.level-item.completed {
+    border-color: #ffd700;
+}
+
+.level-number {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.level-stars {
+    font-size: 12px;
+}
+
+.level-item.locked::after {
+    content: '🔒';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px;
+    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+}
+
+.footer {
+    padding: 20px;
+    padding-bottom: 30px;
+}
+
+.shop-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border: none;
+    border-radius: 15px;
+    padding: 15px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.shop-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(240, 147, 251, 0.5);
+}
+
+.shop-icon {
+    font-size: 24px;
+}
+
+/* 游戏页面样式 */
+.game-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    padding-top: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.back-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 15px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.game-info {
+    text-align: right;
+}
+
+.current-level {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.moves-info {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.moves-count {
+    font-weight: 700;
+    font-size: 20px;
+    color: #ffd700;
+}
+
+.goal-info {
+    text-align: center;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    font-size: 16px;
+}
+
+.progress-bar-container {
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.progress-bar {
+    height: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.score-info {
+    text-align: center;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.tools-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.tool-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    border: 2px solid transparent;
+}
+
+.tool-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.tool-item.active {
+    border-color: #ffd700;
+    background: rgba(255, 215, 0, 0.2);
+}
+
+.tool-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.tool-icon {
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.tool-count {
+    background: #f5576c;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    min-width: 20px;
+    text-align: center;
+}
+
+.game-board-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    overflow: hidden;
+}
+
+.game-board {
+    display: grid;
+    gap: 3px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px;
+    border-radius: 12px;
+    touch-action: none;
+    user-select: none;
+}
+
+.tile {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.tile:hover {
+    transform: scale(1.05);
+}
+
+.tile.selected {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+    z-index: 10;
+}
+
+.tile.hint {
+    animation: hint-pulse 0.8s ease-in-out infinite;
+}
+
+@keyframes hint-pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(255, 215, 0, 0);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    }
+}
+
+.tile.matching {
+    animation: match-pop 0.4s ease-out;
+}
+
+@keyframes match-pop {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.3);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+.tile.falling {
+    animation: fall-down 0.3s ease-in;
+}
+
+@keyframes fall-down {
+    from {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.tile.swapping {
+    transition: transform 0.2s ease;
+}
+
+/* 宝石颜色样式 */
+.tile.type-0 {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+}
+
+.tile.type-1 {
+    background: linear-gradient(135deg, #4ecdc4 0%, #44a3a0 100%);
+}
+
+.tile.type-2 {
+    background: linear-gradient(135deg, #ffe66d 0%, #ffd93d 100%);
+}
+
+.tile.type-3 {
+    background: linear-gradient(135deg, #95e1d3 0%, #7ed1c2 100%);
+}
+
+.tile.type-4 {
+    background: linear-gradient(135deg, #f38181 0%, #e86a6a 100%);
+}
+
+.tile.type-5 {
+    background: linear-gradient(135deg, #aa96da 0%, #9a86c9 100%);
+}
+
+.tile.type-6 {
+    background: linear-gradient(135deg, #fcbad3 0%, #f9a8c2 100%);
+}
+
+/* 提示遮罩 */
+.hint-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    pointer-events: none;
+}
+
+.hint-overlay.visible {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.hint-message {
+    background: rgba(255, 255, 255, 0.95);
+    color: #333;
+    padding: 20px 30px;
+    border-radius: 15px;
+    text-align: center;
+    animation: bounce-in 0.5s ease;
+}
+
+@keyframes bounce-in {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.hint-text {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.hint-arrow {
+    font-size: 24px;
+    animation: bounce 1s ease infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* 弹窗样式 */
+.modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+}
+
+.modal.visible {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 350px;
+    width: 90%;
+    animation: modal-pop 0.4s ease;
+}
+
+@keyframes modal-pop {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.result-icon {
+    font-size: 60px;
+    margin-bottom: 15px;
+}
+
+.result-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.result-stars {
+    font-size: 30px;
+    margin-bottom: 15px;
+}
+
+.result-info {
+    font-size: 16px;
+    opacity: 0.9;
+    margin-bottom: 25px;
+}
+
+.result-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-small {
+    padding: 8px 15px;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(240, 147, 251, 0.5);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.btn-buy {
+    background: linear-gradient(135deg, #4ecdc4 0%, #44a3a0 100%);
+    color: #fff;
+}
+
+.btn-buy:hover {
+    transform: translateY(-2px);
+}
+
+/* 商店样式 */
+.modal-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.shop-items {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.shop-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 12px;
+}
+
+.shop-item .shop-icon {
+    font-size: 32px;
+}
+
+.shop-name {
+    flex: 1;
+    margin-left: 15px;
+    font-weight: 600;
+}
+
+.shop-price {
+    margin-right: 15px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* 响应式设计 */
+@media (max-width: 380px) {
+    .level-grid {
+        gap: 10px;
+        padding: 0 15px;
+    }
+    
+    .tile {
+        font-size: 24px;
+    }
+    
+    .tools-container {
+        gap: 10px;
+    }
+    
+    .tool-item {
+        padding: 8px 12px;
+    }
+    
+    .tool-icon {
+        font-size: 24px;
+    }
+}
+
+@media (max-height: 700px) {
+    .game-board {
+        gap: 2px;
+        padding: 5px;
+    }
+    
+    .tile {
+        font-size: 22px;
+        border-radius: 6px;
+    }
+    
+    .tools-container {
+        padding: 10px;
+    }
+    
+    .tool-item {
+        padding: 6px 10px;
+    }
+}
