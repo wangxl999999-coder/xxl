@@ -1,4 +1,4 @@
-const Game = {
+var Game = {
     board: [],
     rows: 6,
     cols: 6,
@@ -18,6 +18,7 @@ const Game = {
     lastActionTime: Date.now(),
     hintTimer: null,
     hintShown: false,
+    _listenersBound: false,
 
     init: function(levelId) {
         var level = getLevel(levelId);
@@ -112,47 +113,51 @@ const Game = {
     },
 
     setupEventListeners: function() {
-        var self = this;
+        if (this._listenersBound) {
+            return;
+        }
+        this._listenersBound = true;
+
         var boardElement = document.getElementById('game-board');
 
         boardElement.addEventListener('click', function(e) {
             var tile = e.target.closest('.tile');
-            if (tile && !self.isProcessing) {
-                self.handleTileClick(tile);
+            if (tile && !Game.isProcessing) {
+                Game.handleTileClick(tile);
             }
         });
 
         boardElement.addEventListener('touchstart', function(e) {
             var tile = e.target.closest('.tile');
-            if (tile && !self.isProcessing) {
-                self.selectedTile = tile;
+            if (tile && !Game.isProcessing) {
+                Game.selectedTile = tile;
                 tile.classList.add('selected');
-                self.resetHintTimer();
+                Game.resetHintTimer();
             }
-        }, { passive: true });
+        });
 
         boardElement.addEventListener('touchmove', function(e) {
-            if (!self.selectedTile || self.isProcessing) return;
+            if (!Game.selectedTile || Game.isProcessing) return;
 
             var touch = e.touches[0];
             var element = document.elementFromPoint(touch.clientX, touch.clientY);
             var targetTile = element ? element.closest('.tile') : null;
 
-            if (targetTile && targetTile !== self.selectedTile) {
-                self.handleSwipe(self.selectedTile, targetTile);
-            }
-        }, { passive: false });
-
-        boardElement.addEventListener('touchend', function() {
-            if (self.selectedTile) {
-                self.selectedTile.classList.remove('selected');
-                self.selectedTile = null;
+            if (targetTile && targetTile !== Game.selectedTile) {
+                Game.handleSwipe(Game.selectedTile, targetTile);
             }
         });
 
-        document.getElementById('tool-swap').addEventListener('click', function() { self.activateTool('swap'); });
-        document.getElementById('tool-row').addEventListener('click', function() { self.activateTool('row'); });
-        document.getElementById('tool-magic').addEventListener('click', function() { self.activateTool('magic'); });
+        boardElement.addEventListener('touchend', function() {
+            if (Game.selectedTile) {
+                Game.selectedTile.classList.remove('selected');
+                Game.selectedTile = null;
+            }
+        });
+
+        document.getElementById('tool-swap').addEventListener('click', function() { Game.activateTool('swap'); });
+        document.getElementById('tool-row').addEventListener('click', function() { Game.activateTool('row'); });
+        document.getElementById('tool-magic').addEventListener('click', function() { Game.activateTool('magic'); });
     },
 
     handleTileClick: function(tile) {
